@@ -1,0 +1,18 @@
+.MessageBoxContainer {
+  width: 100%;
+  font-size: 20px;
+  height: 37rem;
+  padding: 1rem;
+  position: static;
+}
+.MessageRight {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 100%;
+  max-height: 5rem;
+}
+.MessageLeft {
+  width: 50%;
+}
+.messageContainer {
+}
