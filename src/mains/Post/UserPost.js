@@ -1,10 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
-import openSocket from 'socket.io-client';
 
 import AuthContext from '../../store/AuthContext';
 
 import Display from './Display';
-const socket = openSocket('http://192.168.1.241:8000');
+import { socket } from '../../components/Socket';
 const UserPost = props => {
   // const postCollectionRef = collection(db, 'post');
   // const [displayPost, setDisplayPost] = useState([]);

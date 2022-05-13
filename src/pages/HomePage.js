@@ -5,6 +5,7 @@ import { Grid } from '@material-ui/core';
 import AuthContext from '../store/AuthContext';
 import UserContext from '../store/UserContext';
 import { Outlet } from 'react-router-dom';
+
 const HomePage = props => {
   const authCtx = useContext(AuthContext);
   const userCtx = useContext(UserContext);

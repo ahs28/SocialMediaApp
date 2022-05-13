@@ -8,6 +8,8 @@ import AuthContext from './store/AuthContext';
 import HomePage from './pages/HomePage';
 import UserPost from './mains/Post/UserPost';
 import MessageBox from './mains/Message/MessageBox';
+import MessageBox3 from './mains/Message2/MessageBox3';
+
 function App() {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
@@ -21,6 +23,7 @@ function App() {
               <Route path="userpost" element={<UserPost />}></Route>
               <Route path="feed" element={<Feed />}></Route>
               <Route path="messagebox" element={<MessageBox />} />
+              <Route path="messagebox3" element={<MessageBox3 />} />
             </Route>
             <Route path="*" element={<Navigate to="/home/feed" replace />} />
           </>

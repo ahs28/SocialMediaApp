@@ -2,11 +2,7 @@
 //   return <div style={{ marginTop: '10rem' }}>hi</div>;
 // };
 // export default MessageBox;
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 
-import ListItemText from '@material-ui/core/ListItemText';
-import io from 'socket.io-client';
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import classes from './MessageBox.module.css';
@@ -17,15 +13,15 @@ import Typography from '@mui/material/Typography';
 import UserContext from '../../store/UserContext';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { useContext } from 'react';
+import { socket } from '../../components/Socket';
+import { useState, useEffect, useContext } from 'react';
 import { Button, Grid } from '@mui/material';
 import User from '../Chat/User';
 import DeleteChat from './DeleteChat';
 import RemoveAchat from './RemoveAchat';
-const socket = io.connect('http://192.168.1.241:8000');
+import DisplayMessage from './DisplayMessage';
+import mongoose from 'mongoose';
+import DisplayMessage2 from './DisplayMessage2';
 const MessageBox = props => {
   const userCtx = useContext(UserContext);
 
@@ -37,6 +33,7 @@ const MessageBox = props => {
   const postData = e => {
     if (currentMessage !== '') {
       const sendMessage = {
+        messageId: new mongoose.Types.ObjectId().toHexString(),
         senderid: userCtx.userData._id,
         sendername: userCtx.userData.name,
         receiverid: userCtx.receiver._id,
@@ -48,16 +45,33 @@ const MessageBox = props => {
           .toString()
           .replace(',', '_'),
       };
+
       socket.emit('sendMessage', sendMessage);
-
       setMessageList(list => [...list, sendMessage]);
-
       setCurrentMessage('');
     }
   };
   useEffect(() => {
     socket.on('receiveMessage', receiveMessage => {
       setMessageList(list => [...list, receiveMessage]);
+    });
+  }, [socket]);
+
+  // const checkIsMessageDeleted = (item, deletedMessage) => {
+  //   if (item.messageId === deletedMessage.messageId) {
+  //     console.log('deleted message: ', item);
+  //   }
+  // };
+
+  useEffect(() => {
+    socket.on('deletedMessage', deletedMessage => {
+      setMessageList(prev =>
+        prev.filter(item => item.messageId !== deletedMessage.messageId)
+      );
+      // setMessageList(prev =>
+      //   prev.filter(item => checkIsMessageDeleted(item, deletedMessage))
+      // );
+      // userCtx.setDelMsgId(deletedMessage.messageId);
     });
   }, [socket]);
 
@@ -77,14 +91,14 @@ const MessageBox = props => {
       socket.emit('leaveChat');
       socket.emit(
         'joinChat',
-        [userCtx.userData._id, userCtx.receiver._id]
+        [userCtx.userData?._id, userCtx.receiver?._id]
           .sort()
           .toString()
           .replace(',', '_')
       );
     }
     fetch();
-  }, [userCtx.receiver]);
+  }, [userCtx.receiver, socket]);
 
   return (
     <Grid container style={{ width: '100%' }}>
@@ -145,66 +159,15 @@ const MessageBox = props => {
                             className={classes.MessageRight}
                             key={messageContent.messageId}
                           >
-                            <List>
-                              <ListItem>
-                                <Grid container>
-                                  <Grid item xs={12}>
-                                    <ListItemText
-                                      align="right"
-                                      primary={
-                                        <>
-                                          <span
-                                            style={{
-                                              display: 'flex',
-                                              justifyContent: 'flex-end',
-                                            }}
-                                          >
-                                            <span
-                                              style={{
-                                                marginTop: '0.5rem',
-                                                marginRight: '0.5rem',
-                                              }}
-                                            >
-                                              {messageContent.message}
-                                            </span>
-                                            <span>
-                                              <Avatar
-                                                alt={userCtx.receiver.name}
-                                                src={
-                                                  imgPath +
-                                                  userCtx.userData.image
-                                                }
-                                              />
-                                            </span>
-                                          </span>
-                                        </>
-                                      }
-                                    ></ListItemText>
-                                  </Grid>
-                                  <Grid item xs={12}>
-                                    <ListItemText
-                                      align="right"
-                                      secondary={
-                                        <>
-                                          <span>
-                                            {new Date(
-                                              messageContent.time
-                                            ).toLocaleString('en-us', {
-                                              minute: 'numeric',
-                                              hour: 'numeric',
-                                            })}
-                                          </span>
-                                          &nbsp;
-                                          {/* <span>Me</span> */}
-                                        </>
-                                      }
-                                    ></ListItemText>
-                                  </Grid>
-                                </Grid>
-                              </ListItem>
-                            </List>
+                            <DisplayMessage
+                              name={userCtx.userData.name}
+                              image={imgPath + userCtx.userData.image}
+                              messageContent={messageContent}
+                              sideData="right"
+                              flexSide="flex-end"
+                            />
 
-                            {/* {checkMessage(messageContent)} */}
+                            {checkMessage(messageContent)}
                           </div>
                         );
                       } else {
@@ -213,60 +176,13 @@ const MessageBox = props => {
                             className={classes.MessageLeft}
                             key={messageContent.messageId}
                           >
-                            <List>
-                              <ListItem>
-                                <Grid container>
-                                  <Grid item xs={12}>
-                                    <ListItemText
-                                      align="left"
-                                      primary={
-                                        <span
-                                          style={{
-                                            display: 'flex',
-                                          }}
-                                        >
-                                          <span>
-                                            <Avatar
-                                              alt={userCtx.receiver.name}
-                                              src={
-                                                imgPath + userCtx.receiver.image
-                                              }
-                                            />
-                                          </span>
-                                          <span
-                                            style={{
-                                              marginLeft: '0.5rem',
-                                              marginTop: '0.5rem',
-                                            }}
-                                          >
-                                            {messageContent.message}
-                                          </span>
-                                        </span>
-                                      }
-                                    ></ListItemText>
-                                  </Grid>
-                                  <Grid item xs={12}>
-                                    <ListItemText
-                                      align="left"
-                                      secondary={
-                                        <>
-                                          <span>
-                                            {new Date(
-                                              messageContent.time
-                                            ).toLocaleString('en-us', {
-                                              minute: 'numeric',
-                                              hour: 'numeric',
-                                            })}
-                                          </span>
-                                          &nbsp;
-                                          {/* <span>{userCtx.receiver.name}</span> */}
-                                        </>
-                                      }
-                                    ></ListItemText>
-                                  </Grid>
-                                </Grid>
-                              </ListItem>
-                            </List>
+                            <DisplayMessage
+                              name={userCtx.receiver.name}
+                              image={imgPath + userCtx.receiver.image}
+                              messageContent={messageContent}
+                              sideData="left"
+                              flexSide="flex-start"
+                            />
                           </div>
                         );
                       }

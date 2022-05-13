@@ -1,15 +1,16 @@
 import Modal from '../UI/Modal';
-import { Button, Form, Container } from 'react-bootstrap';
+import { Form, Container } from 'react-bootstrap';
 import { useState, useContext } from 'react';
 
 import AuthContext from '../../store/AuthContext';
-
 import { useNavigate } from 'react-router-dom';
+
 const AddPost = props => {
   const authCtx = useContext(AuthContext);
   const [post, setPost] = useState({
     caption: '',
   });
+
   const navigate = useNavigate();
   const [isUploaded, setIsUploaded] = useState(false);
   const [image, setImage] = useState();
@@ -28,9 +29,9 @@ const AddPost = props => {
     event.preventDefault();
     const formdata = new FormData();
     formdata.append('image', image);
-    console.log(post.caption);
+
     formdata.append('caption', post.caption);
-    console.log(post.caption);
+
     const response = await fetch('http://192.168.1.241:8000/api/post', {
       method: 'POST',
       headers: {
@@ -72,11 +73,17 @@ const AddPost = props => {
                 onChange={e => getUserData(e)}
               />
             </Form.Group>
-
-            <Button className="m-4" onClick={props.onClose}>
+            <button
+              onClick={props.onClose}
+              className="px-4 py-2 m-4 font-medium tracking-wide text-white capitalize transition-colors duration-200 transform bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80 "
+            >
               Close
-            </Button>
-            {isUploaded && <Button type="submit">Save</Button>}
+            </button>
+            {isUploaded && (
+              <button className="px-4 py-2 m-4 font-medium tracking-wide text-white capitalize transition-colors duration-200 transform bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
+                Save
+              </button>
+            )}
           </Form>
         </Container>
       </Modal>

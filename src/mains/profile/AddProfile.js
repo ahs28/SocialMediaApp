@@ -59,10 +59,10 @@ const AddProfile = props => {
   return (
     <Modal onClose={props.onClose}>
       <h5>Add Profile</h5>
-      <Container>
+      <div>
         <Form className="m-1" onSubmit={postData}>
           <div className={classes.profileHead}>
-            <div>
+            <div className="flex justify-center">
               {image ? (
                 <img src={URL.createObjectURL(image)} alt="" />
               ) : (
@@ -103,16 +103,22 @@ const AddProfile = props => {
             />
           </Form.Group>
           <div className={`${classes.profileHead} `}>
-            <Button className="m-2" onClick={props.onClose}>
+            <button
+              onClick={props.onClose}
+              className="px-4 py-2 m-4 font-medium tracking-wide text-white capitalize transition-colors duration-200 transform bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80 "
+            >
               Close
-            </Button>
+            </button>
 
-            <Button type="submit" className="m-2">
+            <button
+              type="submit"
+              className="px-4 py-2 m-4 font-medium tracking-wide text-white capitalize transition-colors duration-200 transform bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+            >
               Save
-            </Button>
+            </button>
           </div>
         </Form>
-      </Container>
+      </div>
     </Modal>
   );
 };

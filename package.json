@@ -1,5 +1,5 @@
 {
-  "homepage": "http://ahs28.github.io/SocialMediaApp",
+  "homepage": "https://ahs28.github.io/SocialMediaApp",
   "name": "auth-module",
   "version": "0.1.0",
   "private": true,
@@ -13,7 +13,9 @@
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
+    "darkreader": "^4.9.46",
     "firebase": "^9.6.9",
+    "mongoose": "^6.3.2",
     "react": "^17.0.2",
     "react-bootstrap": "^2.2.1",
     "react-dom": "^17.0.2",
@@ -51,6 +53,7 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^3.2.3"
+    "gh-pages": "^3.2.3",
+    "tailwindcss": "^3.0.24"
   }
 }

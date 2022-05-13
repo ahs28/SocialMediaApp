@@ -5,6 +5,7 @@ import AuthContext from '../store/AuthContext';
 const Feed = props => {
   const authCtx = useContext(AuthContext);
   const [user, setUser] = useState({});
+
   const loadData = async () => {
     const response = await fetch('http://192.168.1.241:8000/api/user', {
       method: 'GET',

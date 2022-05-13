@@ -14,39 +14,3 @@
 .pics {
   padding: 5px;
 }
-.imageGallery {
-  width: 100;
-  -webkit-column-count: 3;
-  -moz-column-count: 3;
-  column-count: 3;
-  -webkit-column-width: 33%;
-  -moz-column-width: 33%;
-  column-width: 33%;
-
-  text-align: center;
-}
-.imageGallery {
-  -webkit-transition: all 350s ease;
-  transition: all 350s ease;
-  margin-bottom: 12px;
-}
-.imageGallery :hover {
-  filter: opacity(0.95);
-}
-@media (max-width: 991px) {
-  .imageGallery {
-    -webkit-column-count: 1;
-    -moz-column-count: 1;
-    column-count: 1;
-  }
-}
-@media (max-width: 480px) {
-  .imageGallery {
-    -webkit-column-count: 1;
-    -moz-column-count: 1;
-    column-count: 1;
-    -webkit-column-width: 100%;
-    -moz-column-width: 100%;
-    column-width: 100%;
-  }
-}

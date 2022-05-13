@@ -6,9 +6,9 @@ import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AuthContext from '../../store/AuthContext';
 import { useContext } from 'react';
-import openSocket from 'socket.io-client';
+import { socket } from '../../components/Socket';
 import { useEffect } from 'react';
-const socket = openSocket('http://192.168.1.241:8000');
+
 const DeletePost = props => {
   const userCtx = useContext(UserContext);
   const authCtx = useContext(AuthContext);

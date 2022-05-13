@@ -32,7 +32,7 @@ const TotalPost = props => {
     <>
       {post.length
         ? post.map(item => {
-            if (item.creator.name === props.userData) {
+            if (item.creator?.name === props.userData) {
               count = count + 1;
             }
           })
