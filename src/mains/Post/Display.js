@@ -7,6 +7,7 @@ import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
 const Display = props => {
   const count = props.post.length;
   const imgPath = 'http://192.168.1.241:8000';
+
   return (
     <>
       <ImageList variant="masonry" style={{ marginTop: '5rem' }} cols={3}>
@@ -31,11 +32,9 @@ const Display = props => {
                     <ImageListItemBar
                       position="top"
                       subtitle={
-                        <div>
-                          <span>
-                            <DeletePost post={item} setPost={props.setPost} />
-                          </span>
-                        </div>
+                        <span>
+                          <DeletePost post={item} setPost={props.setPost} />
+                        </span>
                       }
                       style={{
                         background: 'transparent',
@@ -48,7 +47,11 @@ const Display = props => {
 
                     <ImageListItemBar
                       title={
-                        <div style={{ textAlign: 'left' }}>
+                        <div
+                          style={{
+                            textAlign: 'left',
+                          }}
+                        >
                           <div
                             style={{
                               display: 'flex',

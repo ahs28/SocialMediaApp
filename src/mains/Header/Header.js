@@ -7,7 +7,7 @@ import {
   disable as disableDarkMode,
   isEnabled as isDarkReaderEnabled,
 } from 'darkreader';
-const Header = props => {
+const Header = () => {
   const [profileShow, setProfileShow] = useState(false);
 
   const showProfileHandler = () => {
@@ -31,8 +31,8 @@ const Header = props => {
     } else {
       return enableDarkMode({
         brightness: 100,
-        contrast: 90,
-        sepia: 40,
+        contrast: 100,
+        sepia: 30,
       });
     }
   };

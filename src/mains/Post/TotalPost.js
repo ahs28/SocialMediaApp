@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { postApi } from '../../Api/Api';
 import AuthContext from '../../store/AuthContext';
 // import { storage } from '../store/firebase-config';
 
@@ -12,29 +13,22 @@ const TotalPost = props => {
     name: '',
   });
   const loadData = async () => {
-    const response = await fetch('http://192.168.1.241:8000/api/post', {
-      method: 'GET',
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${authCtx.token}`, // notice the Bearer before your token
-      },
-      body: JSON.stringify(),
-    });
-    const actualData = await response.json();
-
+    const actualData = await postApi(authCtx.token);
     setPost(actualData.posts);
   };
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      {post.length
+      {post?.length
         ? post.map(item => {
             if (item.creator?.name === props.userData) {
               count = count + 1;
             }
+            return '';
           })
         : null}
       {count}

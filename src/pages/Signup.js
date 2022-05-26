@@ -1,11 +1,10 @@
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import { Container } from 'react-bootstrap';
+
 import AuthContext from '../store/AuthContext';
 import { Link } from 'react-router-dom';
+import { signupApi } from '../Api/Api';
 
 const Signup = () => {
   const initialValues = {
@@ -26,18 +25,7 @@ const Signup = () => {
 
   const postData = async event => {
     event.preventDefault();
-
-    const response = await fetch('http://192.168.1.241:8000/api/signup', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    });
-
-    const actualData = await response.json();
-
+    const actualData = await signupApi(user);
     if (actualData.status === 'success') {
       authCtx.login(actualData.token);
       navigate('/login');

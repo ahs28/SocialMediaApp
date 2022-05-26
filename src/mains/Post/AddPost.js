@@ -4,6 +4,7 @@ import { useState, useContext } from 'react';
 
 import AuthContext from '../../store/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { addPostApi } from '../../Api/Api';
 
 const AddPost = props => {
   const authCtx = useContext(AuthContext);
@@ -29,23 +30,9 @@ const AddPost = props => {
     event.preventDefault();
     const formdata = new FormData();
     formdata.append('image', image);
-
     formdata.append('caption', post.caption);
-
-    const response = await fetch('http://192.168.1.241:8000/api/post', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${authCtx.token}`,
-      },
-      body: formdata,
-    }).then(data => data.json());
-    console.log(response);
+    await addPostApi(formdata, authCtx.token);
     navigate('/');
-    // props.onClose();
-    // window.location.pathname = '/feed';
-    // console.log('fix it');
-
-    // console.log('fix it 2');
   };
 
   return (

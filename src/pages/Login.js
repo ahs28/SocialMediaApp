@@ -1,10 +1,8 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import React from 'react';
-
-import AuthContext from '../../store/AuthContext';
-
-import { socket } from '../../components/Socket';
+import AuthContext from '../store/AuthContext';
+import { loginApi } from '../Api/Api';
 const Login = props => {
   const initialValues = {
     email: '',
@@ -15,8 +13,7 @@ const Login = props => {
   const navigate = useNavigate();
   const [error, setError] = useState('');
   const [user, setUser] = useState(initialValues);
-  // const postCollectionRef = collection(db, 'users');
-  // const [displayPost, setDisplayPost] = useState([]);
+
   const getUserData = e => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
@@ -24,19 +21,11 @@ const Login = props => {
 
   const postData = async event => {
     event.preventDefault();
-    const response = await fetch('http://192.168.1.241:8000/api/login', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    });
-    const actualData = await response.json();
+    const actualData = await loginApi(user);
 
     if (actualData.status === 'success') {
       authCtx.login(actualData.token);
-      socket.emit('isOnline', actualData.data._id);
+
       navigate('/home/feed');
     } else {
       setError(

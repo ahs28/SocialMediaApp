@@ -4,6 +4,7 @@ import AuthContext from '../../store/AuthContext';
 
 import Display from './Display';
 import { socket } from '../../components/Socket';
+import { userPostApi } from '../../Api/Api';
 const UserPost = props => {
   // const postCollectionRef = collection(db, 'post');
   // const [displayPost, setDisplayPost] = useState([]);
@@ -12,17 +13,8 @@ const UserPost = props => {
   const [post, setPost] = useState([]);
 
   const loadData = async () => {
-    const response = await fetch('http://192.168.1.241:8000/api/getUserPost', {
-      method: 'GET',
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${authCtx.token}`, // notice the Bearer before your token
-      },
-      body: JSON.stringify(),
-    });
-    const actualData = await response.json();
-
-    setPost(actualData.posts);
+    const response = await userPostApi(authCtx.token);
+    setPost(response.posts);
 
     socket.on('posts', data => {
       if (data.action === 'create') {

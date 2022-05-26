@@ -1,27 +1,26 @@
 import classes from './Sidebar.module.css';
 import { useContext } from 'react';
-import { Container } from 'react-bootstrap';
 import AuthContext from '../../store/AuthContext';
 import TotalPost from '../Post/TotalPost';
 import Avatar from '@mui/material/Avatar';
 import { Link } from 'react-router-dom';
 import UserContext from '../../store/UserContext';
-const Sidebar = props => {
+import { isOnline } from '../../components/IsOnline';
+import { logoutApi } from '../../Api/Api';
+const Sidebar = () => {
   const authCtx = useContext(AuthContext);
-  const usrCtx = useContext(UserContext);
+  const userCtx = useContext(UserContext);
   const isLoggedIn = authCtx.isLoggedIn;
 
   const imgPath = 'http://192.168.1.241:8000';
 
   const logoutHandler = async () => {
-    await fetch('http://192.168.1.241:8000/api/logout', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${authCtx.token}`,
-      },
-      body: JSON.stringify(),
-    });
+    await logoutApi(authCtx.token);
     authCtx.logout();
+  };
+
+  window.onload = function () {
+    isOnline(userCtx.userData?._id);
   };
 
   return (
@@ -34,12 +33,12 @@ const Sidebar = props => {
               <span className=" flex flex-column text-gray-600  ml-4 text-lg font-bold">
                 <Avatar
                   alt="Profile"
-                  src={`${imgPath}${props.userData.image}`}
+                  src={`${imgPath}${userCtx.userData?.image}`}
                   sx={{ width: 150, height: 150 }}
                   className={classes.profileimg}
                 />
-                <span>{props.userData.name}</span>
-                <span>{props.userData.email}</span>
+                <span>{userCtx.userData?.name}</span>
+                <span>{userCtx.userData?.email}</span>
               </span>
             </div>
             <nav className="mt-10 px-6 ">
@@ -77,7 +76,7 @@ const Sidebar = props => {
                       className="w-6 h-6 text-xs  rounded-full text-white bg-blue-500"
                     >
                       <span className="p-1">
-                        <TotalPost userData={props.userData.name} />
+                        <TotalPost userData={userCtx.userData?.name} />
                       </span>
                     </button>
                   </span>
@@ -104,7 +103,7 @@ const Sidebar = props => {
                   </span>
                 </div>
               </Link>
-              {usrCtx.userData?.isAdmin === true && (
+              {userCtx.userData?.isAdmin === true && (
                 <a href="http://192.168.1.241:8000/api/user/xls" download>
                   <div className="hover:text-gray-800 hover:border-r-2 hover:border-gray-600 hover:bg-gray-100 flex items-center p-2 my-6 transition-colors  duration-200  text-gray-600   ">
                     <svg
@@ -147,18 +146,18 @@ const Sidebar = props => {
           <div className={classes.profileImg}>
             <Avatar
               alt="Profile"
-              src={`${imgPath}${props.userData.image}`}
+              src={`${imgPath}${userCtx.userData.image}`}
               sx={{ width: 150, height: 150 }}
               className={classes.profileimg}
             />
           </div>
           <div className={classes.profileHead}>
-            <h5>{props.userData.name}</h5>
-            <p>{props.userData.email}</p>
+            <h5>{userCtx.userData.name}</h5>
+            <p>{userCtx.userData.email}</p>
           </div>
           <div className={classes.profileDetailsNumber}>
             <span>
-              <TotalPost userData={props.userData.name} />
+              <TotalPost userData={userCtx.userData.name} />
             </span>
             <span>100</span>
             <span>50</span>

@@ -8,6 +8,7 @@ import AuthContext from '../../store/AuthContext';
 import { useContext } from 'react';
 import { socket } from '../../components/Socket';
 import { useEffect } from 'react';
+import { deletePostApi } from '../../Api/Api';
 
 const DeletePost = props => {
   const userCtx = useContext(UserContext);
@@ -31,19 +32,12 @@ const DeletePost = props => {
     setAnchorEl(null);
   };
   const deletePost = async () => {
-    await fetch(`http://192.168.1.241:8000/api/delete/post/${props.post._id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${authCtx.token}`, // notice the Bearer before your token
-      },
-      body: JSON.stringify({
-        senderid: props.senderid,
-        receiverid: props.receiverid,
-      }),
-    });
-
-    // props.setMessageList([]);
+    await deletePostApi(
+      props.post._id,
+      authCtx.token,
+      props.senderid,
+      props.receiverid
+    );
   };
   useEffect(() => {
     socket.on('posts', data => {
@@ -54,6 +48,7 @@ const DeletePost = props => {
         });
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
   return (
     <>

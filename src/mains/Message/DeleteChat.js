@@ -5,9 +5,11 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import AuthContext from '../../store/AuthContext';
+import UserContext from '../../store/UserContext';
 import { useContext } from 'react';
 const DeleteChat = props => {
   const authCtx = useContext(AuthContext);
+  const userCtx = useContext(UserContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = event => {
@@ -29,7 +31,7 @@ const DeleteChat = props => {
         receiverid: props.receiverid,
       }),
     });
-    props.setMessageList([]);
+    userCtx.setMessageList([]);
   };
   return (
     <>

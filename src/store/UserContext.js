@@ -5,21 +5,30 @@ const UserContext = React.createContext({
   setUserData: () => {},
   receiver: {},
   setReceiver: () => {},
-  delMsgId: {},
-  setDelMsgId: () => {},
+  recentMsg: {},
+  setRecentMsg: () => {},
+  messageList: {},
+  setMessageList: () => {},
+  userList: {},
+  setUserList: () => {},
 });
 export const UserContextProvider = props => {
   const [userData, setUserData] = React.useState();
   const [receiver, setReceiver] = React.useState();
-  const [delMsgId, setDelMsgId] = React.useState();
-
+  const [recentMsg, setRecentMsg] = React.useState();
+  const [messageList, setMessageList] = React.useState([]);
+  const [userList, setUserList] = React.useState([]);
   const contextValue = {
     userData,
     setUserData,
     receiver,
     setReceiver,
-    delMsgId,
-    setDelMsgId,
+    recentMsg,
+    setRecentMsg,
+    messageList,
+    setMessageList,
+    userList,
+    setUserList,
   };
   return (
     <UserContext.Provider value={contextValue}>

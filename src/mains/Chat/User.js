@@ -1,11 +1,12 @@
-import classes from './User.module.css';
+// import classes from './User.module.css';
 import React from 'react';
 import { socket } from '../../components/Socket';
 // import { useNavigate } from 'react-router-dom';
 // import CheckCircleTwoToneIcon from '@mui/icons-material/CheckCircleTwoTone';
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import AuthContext from '../../store/AuthContext';
 import UserContext from '../../store/UserContext';
+import { getAllUserApi, getMsgPostApi } from '../../Api/Api';
 
 // import Avatar from '@mui/material/Avatar';
 
@@ -17,68 +18,33 @@ const User = props => {
   const userCtx = useContext(UserContext);
   // const navigate = useNavigate();
   const imgPath = 'http://192.168.1.241:8000';
-  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     postData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const postData = async () => {
-    const response = await fetch('http://192.168.1.241:8000/api/getallUser', {
-      method: 'GET',
-      headers: {
-        'Content-type': 'application/json',
-        Authorization: `Bearer ${authCtx.token}`, // notice the Bearer before your token
-      },
-      body: JSON.stringify(),
-    });
-
-    const actualData = await response.json();
-
-    setUsers(actualData.data);
-
-    socket.on('isOnline', data => {
-      console.log(data.data);
-      setUsers(data.data);
-    });
+    const actualData = await getAllUserApi(authCtx.token);
+    userCtx.setUserList(actualData.data);
   };
-  // window.onload = async () => {
-  //   navigate('/home/feed');
-  // await fetch('http://192.168.1.241:8000/api/logout', {
-  //   method: 'POST',
-  //   headers: {
-  //     Authorization: `Bearer ${authCtx.token}`,
-  //   },
-  //   body: JSON.stringify(),
-  // });
-  // authCtx.logout();
-  // };
+
+  useEffect(() => {
+    socket.on('isOnline', data => {
+      postData();
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket]);
+
   const handleReciver = async user => {
     userCtx.setReceiver(user);
     const values = { senderid: userCtx.userData._id, receiverid: user._id };
-    const response = await fetch(
-      'http://192.168.1.241:8000/api/message/getmsg',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${authCtx.token}`,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      }
-    );
-    const actualData = await response.json();
 
-    props.getSavedData(actualData);
+    const actualData = await getMsgPostApi(authCtx.token, values);
+
+    userCtx.setMessageList(actualData);
   };
 
-  // const getUserData = user => {
-  //   console.log(user);
-  //   // navigate('/home/messagebox', {
-  //   //   state: { user },
-  //   // });
-  // };
   return (
     <div style={{ marginTop: '4rem ' }}>
       <div
@@ -89,7 +55,7 @@ const User = props => {
           <main className="flex-grow flex flex-row min-h-0">
             <section className="flex flex-col flex-none overflow-auto w-100 hover:w-50 group lg:max-w-sm md:w-2/5 transition-all duration-300 ease-in-out">
               <div className="search-box p-4 flex-none ">
-                <form onSubmit="">
+                <form>
                   <div className="relative">
                     <label>
                       <input
@@ -111,13 +77,14 @@ const User = props => {
               </div>
 
               <div className="contacts p-2 flex-1 overflow-y-scroll">
-                {users
-                  ? users.map(user => {
+                {userCtx.userList
+                  ? userCtx.userList.map((user, i) => {
                       if (user?._id !== userCtx.userData?._id) {
                         return (
                           <div
                             className="flex justify-between items-center p-3 hover:bg-gray-100 rounded-lg relative hover:text-gray-800 "
                             onClick={() => handleReciver(user)}
+                            key={i}
                           >
                             <div className="w-16 h-16 relative flex flex-shrink-0  ">
                               <img
@@ -131,7 +98,7 @@ const User = props => {
                               <div className="flex items-center text-sm text-gray-600">
                                 <div className="min-w-0">
                                   <p className="truncate">
-                                    Ok, see you at the subway in a bit.
+                                    {user.lastMessage ? user.lastMessage : null}
                                   </p>
                                 </div>
                                 <p className="ml-2 whitespace-no-wrap">
@@ -144,6 +111,7 @@ const User = props => {
                           </div>
                         );
                       }
+                      return '';
                     })
                   : null}
               </div>
